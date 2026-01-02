@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE WALLACE REPORT | SYSTEM ERROR</title>
+    <style>
+        :root {
+            --primary: #ff003c; /* Cyberpunk červená */
+            --secondary: #00f0ff; /* Glitch modrá */
+            --bg-dark: #050505;
+            --text-main: #e0e0e0;
+            --scanline-color: rgba(0, 0, 0, 0.5);
+        }
 
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* CRT SCANLINE OVERLAY - Efekt starého monitoru */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* GLITCH HEADER ANIMATION */
+        .glitch-wrapper {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000;
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+        }
+
+        h1.glitch {
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0.05em 0 0 var(--secondary), -0.03em -0.04em 0 var(--primary),
+            0.025em 0.04em 0 #d9ff00;
+            animation: glitch 725ms infinite;
+            margin: 0;
+            color: white;
+            letter-spacing: 5px;
+        }
+
+        h1.glitch span {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 var(--secondary), -0.03em -0.04em 0 var(--primary), 0.025em 0.04em 0 #d9ff00; }
+            15% { text-shadow: 0.05em 0 0 var(--secondary), -0.03em -0.04em 0 var(--primary), 0.025em 0.04em 0 #d9ff00; }
+            16% { text-shadow: -0.05em -0.025em 0 var(--secondary), 0.025em 0.035em 0 var(--primary), -0.05em -0.05em 0 #d9ff00; }
+            49% { text-shadow: -0.05em -0.025em 0 var(--secondary), 0.025em 0.035em 0 var(--primary), -0.05em -0.05em 0 #d9ff00; }
+            50% { text-shadow: 0.05em 0.035em 0 var(--secondary), 0.03em 0 0 var(--primary), 0 -0.04em 0 #d9ff00; }
+            99% { text-shadow: 0.05em 0.035em 0 var(--secondary), 0.03em 0 0 var(--primary), 0 -0.04em 0 #d9ff00; }
+            100% { text-shadow: -0.05em 0 0 var(--secondary), -0.025em -0.04em 0 var(--primary), -0.04em -0.025em 0 #d9ff00; }
+        }
+
+        /* TICKER - Běžící text */
+        .ticker-wrap {
+            background: var(--primary);
+            width: 100%;
+            overflow: hidden;
+            height: 30px;
+            line-height: 30px;
+        }
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 15s linear infinite;
+            font-weight: bold;
+            color: black;
+            font-size: 1.1rem;
+        }
+        @keyframes marquee {
+            0% { transform: translate(100%, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ARTICLE ANIMATIONS */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-left: 5px solid var(--primary);
+            padding-left: 15px;
+            margin-top: 40px;
+            text-transform: uppercase;
+        }
+
+        /* DOCUMENT STYLE */
+        .secret-document {
+            background-color: #f4f4f4;
+            color: #111;
+            padding: 40px;
+            margin: 40px 0;
+            font-family: 'Times New Roman', Times, serif;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform: rotate(-1deg);
+            opacity: 0;
+        }
+
+        .secret-document.revealed {
+            animation: stamp-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 1;
+        }
+
+        @keyframes stamp-in {
+            0% { transform: scale(1.5) rotate(5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+        }
+
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 5px solid #d00;
+            color: #d00;
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            transform: rotate(-15deg);
+            opacity: 0;
+            mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+        }
+
+        .secret-document.revealed .stamp {
+            animation: stamp-appear 0.5s 1s forwards;
+        }
+
+        @keyframes stamp-appear {
+            0% { transform: scale(2) rotate(-15deg); opacity: 0; }
+            100% { transform: scale(1) rotate(-15deg); opacity: 0.7; }
+        }
+
+        /* CONTACT GLOW */
+        .contact-box {
+            border: 2px solid var(--primary);
+            padding: 20px;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 60, 0.2), transparent);
+            animation: sweep 3s infinite;
+        }
+
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .contact-box h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Placeholders */
+        .poster-image {
+            width: 100%;
+            max-width: 600px;
+            display: block;
+            margin: 20px auto;
+            border: 1px solid var(--text-main);
+            filter: grayscale(100%) contrast(1.2);
+            transition: filter 0.3s;
+        }
+        .poster-image:hover {
+            filter: grayscale(0%) contrast(1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="glitch-wrapper">
+        <h1 class="glitch" data-text="THE WALLACE REPORT">THE WALLACE REPORT</h1>
+        <p style="color: var(--primary); letter-spacing: 3px;">/// DEKÓDOVÁNÍ PRAVDY ///</p>
+    </div>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            +++ MIMOŘÁDNÁ ZPRÁVA: ŠÉF POLICIE ODVOLÁN +++ SYSTÉM SELHAL +++ SPRAVEDLNOST PRO MENŠINY +++ BENJAMIN WALLACE ODHALUJE PRAVDU +++
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <article>
+            <div class="fade-in">
+                <h2>ODHALENÍ: PROČ MUSEL STAFF-1 ODEJÍT?</h2>
+                <p style="border-left: 2px solid white; padding-left: 10px; font-style: italic;">
+                    Datum: 02.01.2026 | Stav: <span style="color:red; font-weight:bold;">ODTAJNĚNO</span>
+                </p>
+
+                <p class="lead">
+                    Oficiální verze je lež. Mluvili o "administrativních změnách". Lhali vám do očí. Skutečným důvodem pádu šéfa LSPD je tento dokument, který držíte v rukou.
+                </p>
+                <p>
+                    28. prosince 2025 došlo k incidentu, který ukázal pravou tvář našeho systému. Rasové profilování. Zneužití moci. Arogance. Když jsem podal stížnost, město zpanikařilo. Odvolali ho, aby zakryli stopy. 
+                    <strong>Ale klientovi nezaplatili ani cent.</strong>
+                </p>
+            </div>
+
+            <div class="secret-document fade-in">
+                <div class="stamp">DŮKAZ #205</div>
+                <p>
+                <strong>ADRESÁT:</strong> Department of Justice<br>
+                <strong>DATUM:</strong> 28.12.2025<br>
+                <strong>VĚC:</strong> <span style="background:black; color:white; padding: 0 5px;">STÍŽNOST NA ZNEUŽITÍ PRAVOMOCI, PODEZŘENÍ NA RASOVÉ PROFILOVÁNÍ A NÁVRH NA MIMOSOUDNÍ VYROVNÁNÍ</span></p>
+                <hr style="border-top: 1px dashed black;">
+                <p><strong>I. SKUTKOVÉ OKOLNOSTI A KONTEXT</strong><br>
+                Dne 28.12.2025 v čase 15:50-16:00 byla vykonávána přepravní služba pro skupinu osob směřující do oblasti Downtown / South Central. Složení posádky tvořily převážně osoby jiné než bílé pleti.</p>
+                
+                <p>Během kontroly Chief of Police sankcionoval řidiče za údajné porušení CVC § 12500 a nařídil okamžité odtažení vozidla. Tento postup byl zvolen navzdory tomu, že šlo o administrativní přestupek (zapomenutý doklad), u kterého zákon nevyžaduje zajištění vozidla.</p>
+
+                <p><strong>II. DŮVODNÉ PODEZŘENÍ Z NEROVNÉHO ZACHÁZENÍ</strong><br>
+                Okolnosti zásahu vyvolávají silné podezření z tzv. „Implicit Bias“ nebo rasového profilování. Je nutné položit si otázku: Uplatnil by Chief of Police stejně drakonický postup, kdyby se ve vozidle nacházely osoby z majoritní populace v oblasti Vinewood?</p>
+
+                <p><strong>III. ODŮVODNĚNÍ VÝŠE ODŠKODNÉHO</strong><br>
+                Vzhledem ke společenské nebezpečnosti takového jednání je vyčíslen nárok na celkové vyrovnání v sumě <strong>100 000 USD</strong>. Tato částka odráží materiální škodu, ztrátu důvěry klientů a sankční složku.</p>
+
+                <p><strong>IV. NÁVRH NA ŘEŠENÍ</strong><br>
+                Navrhuje se uzavření věci za těchto podmínek:<br>
+                1. Administrativní náprava (výmaz záznamu).<br>
+                2. Finanční kompenzace: Vyplacení sumy 100 000 USD.</p>
+            </div>
+
+            <div class="fade-in">
+                <p>
+                    Šéf policie skončil. To je naše první vítězství. Ale systém nám stále dluží 100 000 dolarů a omluvu. 
+                    Nenecháme to tak. Pokud systém nefunguje pro nás, změníme ho.
+                </p>
+            </div>
+
+        </article>
+
+        <div class="contact-box fade-in">
+            <h3>PŘIDEJ SE K ODPORU</h3>
+            <p>Stal ses obětí policejní šikany? Cítíš, že tě systém ignoruje?</p>
+            <h2 style="color: white; margin: 10px 0;">BENJAMIN WALLACE</h2>
+            <p style="font-size: 1.5rem; color: var(--secondary); font-weight: bold;">(205) 876-7654</p>
+            <p>Tvůj advokát. Tvůj hlas.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Skript pro animace při skrolování
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if(entry.target.classList.contains('secret-document')) {
+                        entry.target.classList.add('revealed');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
